@@ -1,0 +1,10 @@
+/btcclick
+/freebitcoin
+/scarlet/*.png
+/scarlet/b64.py
+/scarlet/script.py
+/ptcstar/*.png
+.env
+img.py
+teste.py
+/.idea
