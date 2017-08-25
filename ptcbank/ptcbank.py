@@ -1,4 +1,4 @@
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException
 from PIL import Image
 from captcha2upload import CaptchaUpload
 import time
@@ -21,7 +21,7 @@ def init(browser, dados):
         resposta = captcha.solve('ptcbank.png')
 
         browser.find_element_by_name('code').send_keys(resposta)
-        time.sleep(8)                                                                                                                               
+        time.sleep(8)
 
         time.sleep(2)
         print '[*] Efetuando login'
@@ -56,13 +56,18 @@ def run(browser):
                     print '[*] Selecionando iframe'
                     browser.switch_to_frame(iframe)
                     time.sleep(10)
-                    try:
-                        browser.find_element_by_id('close2').click()
-                        print '[*] Recompensa adquirida com sucesso'
-                        saldo = saldo + 0.2
-                    except NoSuchElementException:
-                        print '[*] Botao close nao localizado'
-                        browser.close()
+                    fecharModal = True
+
+                    while fecharModal:
+                        try:
+                            browser.find_element_by_id('close2').click()
+                            print '[*] Recompensa adquirida com sucesso'
+                            saldo = saldo + 0.2
+                            fecharModal = False
+                        except ElementNotVisibleException:
+                            print '[*] Botao close ainda nao disponivel'
+                            time.sleep(5)
+
 
                 else:
                     print '[*] Anuncio nao contabilizado'
@@ -98,13 +103,16 @@ def run(browser):
                     print '[*] Selecionando iframe'
                     browser.switch_to_frame(iframe)
                     time.sleep(10)
-                    try:
-                        browser.find_element_by_id('close2').click()
-                        print '[*] Recompensa adquirida com sucesso'
-                        saldo = saldo + 0.10
-                    except NoSuchElementException:
-                        print '[*] Botao close nao localizado'
-                        browser.close()
+                    fecharModal = True
+                    while fecharModal:
+                        try:
+                            browser.find_element_by_id('close2').click()
+                            print '[*] Recompensa adquirida com sucesso'
+                            saldo = saldo + 0.1
+                            fecharModal = False
+                        except ElementNotVisibleException:
+                            print '[*] Botao close ainda nao disponivel'
+                            time.sleep(5)
 
                 else:
                     print '[*] Anuncio nao contabilizado'
@@ -143,13 +151,17 @@ def run(browser):
                     print '[*] Selecionando iframe'
                     browser.switch_to_frame(iframe)
                     time.sleep(12)
-                    try:
-                        browser.find_element_by_id('close2').click()
-                        print '[*] Recompensa adquirida com sucesso'
-                        saldo = saldo + 0.02
-                    except NoSuchElementException:
-                        print '[*] Botao close nao localizado'
-                        browser.close()
+                    fecharModal = True
+                    while fecharModal:
+                        try:
+                            browser.find_element_by_id('close2').click()
+                            print '[*] Recompensa adquirida com sucesso'
+                            saldo = saldo + 0.02
+                            fecharModal = False
+                        except ElementNotVisibleException:
+                            print '[*] Botao close ainda nao disponivel'
+                            time.sleep(5)
+
 
                 else:
                     print '[*] Anuncio nao contabilizado'

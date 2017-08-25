@@ -37,21 +37,20 @@ browser.set_window_size(1200,654)
 while True:
     i = 0
 
-    ptcbank.init(browser, dados['ptcbank'])
-    ptcbank.run(browser)
-
-
-    twodollarclick.init(browser, dados['buxinc'])
-    twodollarclick.run(browser)
-
-    buxinc.init(browser, dados['twodollarclick'])
-    buxinc.run(browser)
+    # ptcbank.init(browser, dados['ptcbank'])
+    # ptcbank.run(browser)
 
     ptcstar.init(browser, dados['ptcstar'])
     ptcstar.run(browser)
 
     scarlet.init(browser, dados['scarlet'])
     scarlet.run(browser)
+
+    twodollarclick.init(browser, dados['buxinc'])
+    twodollarclick.run(browser)
+
+    buxinc.init(browser, dados['twodollarclick'])
+    buxinc.run(browser)
 
     print 'Aguardando 24hrs pare reiniciar'
     time.sleep(86400)

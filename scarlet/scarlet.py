@@ -128,7 +128,7 @@ def run(browser):
 
 
     mainWindow = browser.window_handles[0]  # pega "focus" da janela principal
-    randon_block = random.sample(tds,14)
+    randon_block = random.sample(tds,20)
 
     for block in randon_block:
         try:
