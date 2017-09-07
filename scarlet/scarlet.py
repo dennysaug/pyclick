@@ -58,12 +58,12 @@ def resolveCaptcha(browser, imagesb64):
 
 
 
-    except NoSuchElementException:
+    except NoSuchElementException or StaleElementReferenceException:
         print '[*] Captcha nao disponivel'
 
     finally:
-        print 'entrou  no finally!'
-        time.sleep(10)
+        print '[*] Finalizado'
+        time.sleep(4)
         browser.close()
         browser.switch_to_window(mainWindow)
 
@@ -86,7 +86,7 @@ def init(browser, dados):
 
         print '[*] Efetuando login'
         browser.find_element_by_name('login').click()
-        time.sleep(22)
+        time.sleep(28)
 
 
 
@@ -101,21 +101,21 @@ def run(browser):
         imgb64 = open('scarlet/captchas/' + imgb64, 'r')
         imagesb64.append(base64.b64encode(imgb64.read()))
 
-    try:
-        ads = browser.find_elements_by_css_selector('div.ad-block')
-        if len(ads):
-            for ad in ads:
-                if ad.get_attribute('class').find('disabled') < 1:
-                    ad.find_element_by_tag_name('span').click()
-                    time.sleep(3)
-                    resolveCaptcha(browser, imagesb64)
-
-
-            print '[*] Fim Ads'
-
-
-    except NoSuchElementException:
-        print '[*] Ads indisponivel no momento'
+    # try:
+    #     ads = browser.find_elements_by_css_selector('div.ad-block')
+    #     if len(ads):
+    #         for ad in ads:
+    #             if ad.get_attribute('class').find('disabled') < 1:
+    #                 ad.find_element_by_tag_name('span').click()
+    #                 time.sleep(3)
+    #                 resolveCaptcha(browser, imagesb64)
+    #
+    #
+    #         print '[*] Fim Ads'
+    #
+    #
+    # except NoSuchElementException:
+    #     print '[*] Ads indisponivel no momento'
 
 
     ######################################### BUXGRID #################################################

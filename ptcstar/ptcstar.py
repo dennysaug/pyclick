@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, \
-    ElementNotVisibleException
+    ElementNotVisibleException, UnexpectedAlertPresentException, NoAlertPresentException, NoSuchWindowException
 from compareimage import  bot
 import requests
 import time
@@ -15,11 +15,20 @@ import random
 def resolveCaptcha(browser):
     mainWindow = browser.window_handles[0]  # pega "focus" da janela principal
     print '[*] Trocando para nova janela'
-    browser.switch_to_window(browser.window_handles[1])
-    # time.sleep(10)
 
-    # if browser.find_element_by_tag_name('body').text == "Error - You've already made all attempts of today.":
-    #     print '[*] ' + browser.find_element_by_tag_name('body').text
+
+    browser.switch_to_window(browser.window_handles[1])
+
+    time.sleep(3)
+
+    try:
+        browser.switch_to_alert().dismiss()
+    except NoAlertPresentException or UnexpectedAlertPresentException:
+        print 'entrou no excep'
+        time.sleep(2)
+
+
+    # if browser.context == '':
     #     return False
 
     try:
@@ -79,8 +88,15 @@ def resolveCaptcha(browser):
 
 
             time.sleep(5)
+
+
             frame = browser.find_element_by_tag_name('frame')
             browser.switch_to_frame(frame)
+
+            try:
+                browser.switch_to_alert().dismiss()
+            except NoAlertPresentException or UnexpectedAlertPresentException:
+                time.sleep(2)
 
             timerOK = True
             while timerOK:
@@ -171,14 +187,19 @@ def resolveCaptcha(browser):
 
     except NoSuchElementException or StaleElementReferenceException:
         print '[*] Captcha nao disponivel\n'
-        return False
+        return True
 
     finally:
+
         # time.sleep(1)
-        while len(browser.window_handles) > 1:
-            browser.switch_to_window(browser.window_handles[-1])
-            browser.close()
-        browser.switch_to_window(mainWindow)
+        try:
+            while len(browser.window_handles) > 1:
+                browser.switch_to_window(browser.window_handles[-1])
+                browser.close()
+            browser.switch_to_window(mainWindow)
+        except NoSuchWindowException:
+            browser.switch_to_window(mainWindow)
+
 
 
 
@@ -228,10 +249,16 @@ def run(browser):
     except NoSuchElementException:
         print '[*] Ads indisponivel no momento'
 
+    browser.get('http://ptcstar.com/index.php?view=click&')
+
     ######################################### STARGRID #################################################
 
-    starGrid = browser.find_element_by_xpath('/html/body/div[2]/div/div/div/div/div[2]/nav/ul/li[2]/ul/li[3]/a').get_attribute('href')
-    browser.get(starGrid)
+    try:
+        starGrid = browser.find_element_by_xpath('/html/body/div[2]/div/div/div/div/div[2]/nav/ul/li[2]/ul/li[3]/a').get_attribute('href')
+        browser.get(starGrid)
+    except NoSuchElementException:
+        browser.get('http://ptcstar.com/index.php?view=adgrid')
+
     print '[*] Indo para StarGrid'
     grid = browser.find_element_by_class_name('adgridbase')
     links = grid.find_elements_by_class_name('adgrid')
